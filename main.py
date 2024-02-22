@@ -11,7 +11,7 @@ def hello(name: str):
 @app.command()
 def goodbye(name: str, formal: bool = False):
     if formal:
-        print(f"Goodbye Mz. {name}. Have a good day.")
+        print(f"Goodbye Mzz. {name}. Have a good day.")
     else:
         print(f"Bye {name}!")
 
