@@ -1,20 +1,10 @@
 import typer
 
-app = typer.Typer()
-
-
-@app.command()
-def hello(name: str):
-    print(f"Hello {name}")
-
-
-@app.command()
-def goodbye(name: str, formal: bool = False):
-    if formal:
-        print(f"Goodbye Mzdd. {name}. Have a good day.")
-    else:
-        print(f"Bye {name}!")
+def main():
+    ticket_number = typer.prompt("What is the ticket number?")
+    description = typer.prompt("What is the ticket description?")
+    changelog_type = typer.prompt("What type is it?")
 
 
 if __name__ == "__main__":
-    app()
+    typer.run(main)
