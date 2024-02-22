@@ -11,6 +11,7 @@ def main(type: ChangelogType = ChangelogType.internal):
     ticket_number = typer.prompt("What is the ticket number?")
     description = typer.prompt("What is the ticket description?")
 
+
     print(f"{ticket_number} of type: {type.value}")
 
 
