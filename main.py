@@ -1,9 +1,17 @@
+from enum import Enum
 import typer
 
-def main():
+class ChangelogType(str, Enum):
+    internal = "internal"
+    api = "api"
+    front_office = "front office"
+
+
+def main(type: ChangelogType = ChangelogType.internal):
     ticket_number = typer.prompt("What is the ticket number?")
     description = typer.prompt("What is the ticket description?")
-    changelog_type = typer.prompt("What type is it?")
+
+    print(f"{ticket_number} of type: {type.value}")
 
 
 if __name__ == "__main__":
