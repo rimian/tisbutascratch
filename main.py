@@ -4,7 +4,7 @@ import typer
 class ChangelogType(str, Enum):
     internal = "internal"
     api = "api"
-    front_office = "front office"
+    front_office = "office"
 
 
 def main(type: ChangelogType = ChangelogType.internal):
