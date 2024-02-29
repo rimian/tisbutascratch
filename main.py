@@ -1,12 +1,14 @@
 from enum import Enum
 import typer
+from git import Repo
 
 app = typer.Typer()
-
+repo = Repo.init(".")
 
 class ChangelogType(str, Enum):
-    internal = "internal"
+    admin = "admin"
     api = "api"
+    internal = "internal"
     front_office = "office"
 
 
@@ -20,8 +22,9 @@ def start(type: ChangelogType = ChangelogType.internal):
 
 
 @app.command()
-def other():
-    pass
+def wtf():
+    hcommit = repo.head.commit
+    print(hcommit.diff())
 
 
 if __name__ == "__main__":
