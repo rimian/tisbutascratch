@@ -13,7 +13,7 @@ def main(type: ChangelogType = ChangelogType.internal):
 
     print(f"{ticket_number} of type: {type.value}")
 
-    f = open(f"{type.value}/{ticket_number}-{description.replace(' ', '-')}.md", "x")
+    f = open(f"{type.value}/{ticket_number}-{description.lower().replace(' ', '-')}.md", "x")
     f.write(f"[{ticket_number}] - {description}")
 
 
