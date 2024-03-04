@@ -17,7 +17,7 @@ def start(type: ChangelogType = ChangelogType.internal):
     ticket_number = typer.prompt("What is the ticket number?")
     description = typer.prompt("What is the ticket description?")
     print(f"{ticket_number} of type: {type.value}")
-    f = open(f"{type.value}/{ticket_number}-{description.lower().replace(' ', '-')}.md", "x")
+    f = open(f"changelog/unreleased/{type.value}/{ticket_number}-{description.strip().lower().replace(' ', '-')}.md", "x")
     f.write(f"[{ticket_number}] - {description}")
 
 
