@@ -17,8 +17,15 @@ def start(type: ChangelogType = ChangelogType.internal):
     ticket_number = typer.prompt("What is the ticket number?")
     description = typer.prompt("What is the ticket description?")
     print(f"{ticket_number} of type: {type.value}")
-    f = open(f"changelog/unreleased/{type.value}/{ticket_number}-{description.strip().lower().replace(' ', '-')}.md", "x")
-    f.write(f"[{ticket_number}] - {description}")
+
+    changelog_path = f"changelog/unreleased/{type.value}/{ticket_number}-{description.strip().lower().replace(' ', '-')}.md"
+
+    f = open(changelog_path, "x")
+    f.write(f"[{ticket_number}] - {description}\n")
+    f.close()
+
+    repo.index.add(changelog_path)
+    repo.index.commit(f"feat({type.value}): changelog - {ticket_number} - {description}")
 
 
 @app.command()
