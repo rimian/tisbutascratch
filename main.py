@@ -18,6 +18,8 @@ def start(type: ChangelogType = ChangelogType.internal):
     description = typer.prompt("What is the ticket description?")
     print(f"{ticket_number} of type: {type.value}")
 
+    repo.git.checkout('-b', ticket_number)
+
     changelog_path = f"changelog/unreleased/{type.value}/{ticket_number}-{description.strip().lower().replace(' ', '-')}.md"
 
     f = open(changelog_path, "x")
