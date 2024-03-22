@@ -31,6 +31,14 @@ def start(type: ChangelogType = ChangelogType.internal):
 
 
 @app.command()
+def commit():
+    ticket_number = repo.active_branch.name
+    message = typer.prompt("What is the commit message?")
+    repo.index.commit(f"{ticket_number} - {message}")
+
+
+# TODO get this to work
+@app.command()
 def wtf():
     hcommit = repo.head.commit
     print(hcommit.diff())
