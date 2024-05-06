@@ -5,31 +5,37 @@ from git import Repo
 app = typer.Typer()
 repo = Repo.init(".")
 
-class ChangelogType(str, Enum):
-    admin = "admin"
-    api = "api"
-    internal = "internal"
-    front_office = "office"
+
+def pick_changelog_type():
+    types = ["admin", "api", "internal", "front_office"]
+    print("Please select a changelog type:")
+    for index, option in enumerate(types, start=1):
+        print(f"{index}. {option}")
+    selected_index = int(input("Enter the number corresponding to your choice: ")) - 1
+
+    return types[selected_index]
 
 
 @app.command()
-def start(type: ChangelogType = ChangelogType.internal):
+def start():
+    changelog_type = pick_changelog_type()
     ticket_number = typer.prompt("What is the ticket number?")
     description = typer.prompt("What is the ticket description?")
-    print(f"{ticket_number} of type: {type.value}")
+
+    print(f"{ticket_number} of type: {changelog_type}")
 
     description_formatted = description.strip().lower().replace(' ', '-')
 
     repo.git.checkout('-b', f"{ticket_number}-{description_formatted}")
 
-    changelog_path = f"changelog/unreleased/{type.value}/{ticket_number}-{description_formatted}.md"
+    changelog_path = f"changelog/unreleased/{changelog_type}/{ticket_number}-{description_formatted}.md"
 
     f = open(changelog_path, "x")
     f.write(f"[{ticket_number}] - {description}\n")
     f.close()
 
     repo.index.add(changelog_path)
-    repo.index.commit(f"feat({type.value}): changelog - {ticket_number} - {description}")
+    repo.index.commit(f"feat({changelog_type}): changelog - {ticket_number} - {description}")
 
 
 @app.command()
