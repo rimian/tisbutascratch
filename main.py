@@ -7,9 +7,6 @@ from meta import read_meta, write_meta
 app = typer.Typer()
 repo = Repo.init(".")
 
-@app.command()
-def init():
-
 
 @app.command()
 def start():
