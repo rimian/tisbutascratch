@@ -1,30 +1,10 @@
-from enum import Enum
 import typer
 from git import Repo
-import re
+from utils import extract_ticket_number, pick_changelog_type
 
 
 app = typer.Typer()
 repo = Repo.init(".")
-
-
-class ChangelogType(str, Enum):
-    admin = "admin"
-    api = "api"
-    internal = "internal"
-    front_office = "front_office"
-
-
-def pick_changelog_type() -> str:
-    """
-    Prompt the user to select a changelog type.
-    """
-    types = [type_.value for type_ in ChangelogType]
-    print("Please select a changelog type:")
-    for index, option in enumerate(types, start=1):
-        print(f"{index}. {option}")
-    selected_index = int(input("Enter the number corresponding to your choice: ")) - 1
-    return types[selected_index]
 
 
 @app.command()
@@ -58,18 +38,17 @@ def start():
 
 
 @app.command()
-def commit(dry_run: bool = typer.Option(False, "--dry-run", help="Perform a dry run without committing changes.")):
+def commit(dry_run: bool = typer.Option(False, "--dry-run", "-d", help="Perform a dry run without committing changes.")):
     """
     Commit changes with a formatted commit message based on the current branch name.
     """
     branch_name = repo.active_branch.name
+    ticket_number = extract_ticket_number(branch_name)
 
-    # Define the pattern to extract the ticket number
-    pattern = r"^TF-\d+"
-    matches = re.search(pattern, branch_name)
+    if ticket_number:
+        if dry_run:
+            print("Dry run mode enabled. Changes not committed.")
 
-    if matches:
-        ticket_number = matches.group()
         print("Ticket number:", ticket_number)
 
         # Prompt for the commit message and validate it
@@ -83,7 +62,6 @@ def commit(dry_run: bool = typer.Option(False, "--dry-run", help="Perform a dry 
         commit_message = f"{ticket_number} - {message}"
 
         if dry_run:
-            print("Dry run mode enabled. Changes not committed.")
             print("Commit message:", commit_message)
             return
 
