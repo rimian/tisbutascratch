@@ -1,10 +1,14 @@
 import typer
 from git import Repo
 from utils import extract_ticket_number, pick_changelog_type
+from meta import read_meta, write_meta
 
 
 app = typer.Typer()
 repo = Repo.init(".")
+
+@app.command()
+def init():
 
 
 @app.command()
@@ -27,6 +31,7 @@ def start():
 
     # Check if the file already exists
     try:
+        write_meta(branch_name, changelog_type, ticket_number, description)
         with open(changelog_path, "x") as f:
             f.write(f"[{ticket_number}] - {description}\n")
     except FileExistsError:
@@ -72,11 +77,19 @@ def commit(dry_run: bool = typer.Option(False, "--dry-run", "-d", help="Perform 
         print("Did not find the ticket number in your branch name.")
 
 
-# TODO get this to work
 @app.command()
 def wtf():
-    hcommit = repo.head.commit
-    print(hcommit.diff())
+    """
+    Print metadata for the current branch.
+    """
+    branch_name = repo.active_branch.name
+    metadata = read_meta(branch_name)
+    if metadata:
+        print(f"Metadata for branch '{branch_name}':")
+        for key, value in metadata.items():
+            print(f"{key}: {value}")
+    else:
+        print(f"No metadata found for branch '{branch_name}'.")
 
 
 if __name__ == "__main__":
