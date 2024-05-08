@@ -1,6 +1,8 @@
 from enum import Enum
 import typer
 from git import Repo
+import re
+
 
 app = typer.Typer()
 repo = Repo.init(".")
@@ -56,10 +58,40 @@ def start():
 
 
 @app.command()
-def commit():
-    ticket_number = repo.active_branch.name
-    message = typer.prompt("What is the commit message?")
-    repo.index.commit(f"{ticket_number} - {message}")
+def commit(dry_run: bool = typer.Option(False, "--dry-run", help="Perform a dry run without committing changes.")):
+    """
+    Commit changes with a formatted commit message based on the current branch name.
+    """
+    branch_name = repo.active_branch.name
+
+    # Define the pattern to extract the ticket number
+    pattern = r"^TF-\d+"
+    matches = re.search(pattern, branch_name)
+
+    if matches:
+        ticket_number = matches.group()
+        print("Ticket number:", ticket_number)
+
+        # Prompt for the commit message and validate it
+        while True:
+            message = typer.prompt("What is the commit message?")
+            if message.strip():
+                break
+            else:
+                print("Please provide a non-empty commit message.")
+
+        commit_message = f"{ticket_number} - {message}"
+
+        if dry_run:
+            print("Dry run mode enabled. Changes not committed.")
+            print("Commit message:", commit_message)
+            return
+
+        # Commit changes with the formatted message
+        repo.index.commit(commit_message)
+        print("Changes committed successfully.")
+    else:
+        print("Did not find the ticket number in your branch name.")
 
 
 # TODO get this to work
