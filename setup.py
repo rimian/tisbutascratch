@@ -1,12 +1,14 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
-    name='tisbutascatch',
-    version='1.0',
-    scripts=['main.py'],
+    name='tisbutascratch',
+    version='1.1',
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
     install_requires=[
         'enum34',
         'typer',
-        'GitPython'
+        'GitPython',
+        'PyYAML'
     ]
 )
